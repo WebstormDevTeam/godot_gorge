@@ -562,6 +562,11 @@ void ProjectDialog::ok_pressed() {
 
 		EditorVCSInterface::create_vcs_metadata_files(EditorVCSInterface::VCSMetadata(vcs_metadata_selection->get_selected()), path);
 
+		if (use_gorge_check_box->is_pressed()){
+			print_line("Use Gorge Plugin");
+
+		}
+
 		// Ensures external editors and IDEs use UTF-8 encoding.
 		const String editor_config_path = path.path_join(".editorconfig");
 		Ref<FileAccess> f = FileAccess::open(editor_config_path, FileAccess::WRITE);
@@ -934,15 +939,15 @@ void ProjectDialog::_bind_methods() {
 }
 
 ProjectDialog::ProjectDialog() {
-	VBoxContainer *vb = memnew(VBoxContainer);
-	add_child(vb);
+	VBoxContainer *pVBoxContainer = memnew(VBoxContainer);
+	add_child(pVBoxContainer);
 
 	name_container = memnew(VBoxContainer);
-	vb->add_child(name_container);
+	pVBoxContainer->add_child(name_container);
 
-	Label *l = memnew(Label);
-	l->set_text(TTRC("Project Name:"));
-	name_container->add_child(l);
+	Label *pLabel = memnew(Label);
+	pLabel->set_text(TTRC("Project Name:"));
+	name_container->add_child(pLabel);
 
 	project_name = memnew(LineEdit);
 	project_name->set_virtual_keyboard_show_on_focus(false);
@@ -950,20 +955,20 @@ ProjectDialog::ProjectDialog() {
 	name_container->add_child(project_name);
 
 	project_path_container = memnew(VBoxContainer);
-	vb->add_child(project_path_container);
+	pVBoxContainer->add_child(project_path_container);
 
-	HBoxContainer *pphb_label = memnew(HBoxContainer);
-	project_path_container->add_child(pphb_label);
+	HBoxContainer *path_label = memnew(HBoxContainer);
+	project_path_container->add_child(path_label);
 
-	l = memnew(Label);
-	l->set_text(TTRC("Project Path:"));
-	l->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-	pphb_label->add_child(l);
+	pLabel = memnew(Label);
+	pLabel->set_text(TTRC("Project Path:"));
+	pLabel->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+	path_label->add_child(pLabel);
 
 	create_dir = memnew(CheckButton);
 	create_dir->set_text(TTRC("Create Folder"));
 	create_dir->set_pressed(true);
-	pphb_label->add_child(create_dir);
+	path_label->add_child(create_dir);
 	create_dir->connect(SceneStringName(toggled), callable_mp(this, &ProjectDialog::_create_dir_toggled));
 
 	HBoxContainer *pphb = memnew(HBoxContainer);
@@ -976,11 +981,11 @@ ProjectDialog::ProjectDialog() {
 	pphb->add_child(project_path);
 
 	install_path_container = memnew(VBoxContainer);
-	vb->add_child(install_path_container);
+	pVBoxContainer->add_child(install_path_container);
 
-	l = memnew(Label);
-	l->set_text(TTRC("Project Installation Path:"));
-	install_path_container->add_child(l);
+	pLabel = memnew(Label);
+	pLabel->set_text(TTRC("Project Installation Path:"));
+	install_path_container->add_child(pLabel);
 
 	HBoxContainer *iphb = memnew(HBoxContainer);
 	install_path_container->add_child(iphb);
@@ -1016,21 +1021,21 @@ ProjectDialog::ProjectDialog() {
 	msg->set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER);
 	msg->set_custom_minimum_size(Size2(200, 0) * EDSCALE);
 	msg->set_autowrap_mode(TextServer::AUTOWRAP_WORD_SMART);
-	vb->add_child(msg);
+	pVBoxContainer->add_child(msg);
 
 	// Renderer selection.
 	renderer_container = memnew(VBoxContainer);
-	vb->add_child(renderer_container);
-	l = memnew(Label);
-	l->set_text(TTRC("Renderer:"));
-	renderer_container->add_child(l);
+	pVBoxContainer->add_child(renderer_container);
+	pLabel = memnew(Label);
+	pLabel->set_text(TTRC("Renderer:"));
+	renderer_container->add_child(pLabel);
 	HBoxContainer *rshc = memnew(HBoxContainer);
 	renderer_container->add_child(rshc);
 	renderer_button_group.instantiate();
 
 	// Left hand side, used for checkboxes to select renderer.
-	Container *rvb = memnew(VBoxContainer);
-	rshc->add_child(rvb);
+	Container *pBoxContainer = memnew(VBoxContainer);
+	rshc->add_child(pBoxContainer);
 
 	String default_renderer_type = "forward_plus";
 	if (EditorSettings::get_singleton()->has_setting("project_manager/default_renderer")) {
@@ -1051,7 +1056,7 @@ ProjectDialog::ProjectDialog() {
 #endif
 	rs_button->set_meta(SNAME("rendering_method"), "forward_plus");
 	rs_button->connect(SceneStringName(pressed), callable_mp(this, &ProjectDialog::_renderer_selected));
-	rvb->add_child(rs_button);
+	pBoxContainer->add_child(rs_button);
 	if (default_renderer_type == "forward_plus") {
 		rs_button->set_pressed(true);
 	}
@@ -1063,7 +1068,7 @@ ProjectDialog::ProjectDialog() {
 #endif
 	rs_button->set_meta(SNAME("rendering_method"), "mobile");
 	rs_button->connect(SceneStringName(pressed), callable_mp(this, &ProjectDialog::_renderer_selected));
-	rvb->add_child(rs_button);
+	pBoxContainer->add_child(rs_button);
 	if (default_renderer_type == "mobile") {
 		rs_button->set_pressed(true);
 	}
@@ -1075,7 +1080,7 @@ ProjectDialog::ProjectDialog() {
 #endif
 	rs_button->set_meta(SNAME("rendering_method"), "gl_compatibility");
 	rs_button->connect(SceneStringName(pressed), callable_mp(this, &ProjectDialog::_renderer_selected));
-	rvb->add_child(rs_button);
+	pBoxContainer->add_child(rs_button);
 #if defined(GLES3_ENABLED)
 	if (default_renderer_type == "gl_compatibility") {
 		rs_button->set_pressed(true);
@@ -1083,14 +1088,14 @@ ProjectDialog::ProjectDialog() {
 #endif
 	rshc->add_child(memnew(VSeparator));
 
-	// Right hand side, used for text explaining each choice.
-	rvb = memnew(VBoxContainer);
-	rvb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-	rshc->add_child(rvb);
+	// 右侧，用于解释每个选项的文本。
+	pBoxContainer = memnew(VBoxContainer);
+	pBoxContainer->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+	rshc->add_child(pBoxContainer);
 	renderer_info = memnew(Label);
 	renderer_info->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
 	renderer_info->set_modulate(Color(1, 1, 1, 0.7));
-	rvb->add_child(renderer_info);
+	pBoxContainer->add_child(renderer_info);
 
 	rd_not_supported = memnew(Label);
 	rd_not_supported->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
@@ -1103,45 +1108,51 @@ ProjectDialog::ProjectDialog() {
 
 	_renderer_selected();
 
-	l = memnew(Label);
-	l->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
-	l->set_text(TTRC("The renderer can be changed later, but scenes may need to be adjusted."));
-	// Add some extra spacing to separate it from the list above and the buttons below.
-	l->set_custom_minimum_size(Size2(0, 40) * EDSCALE);
-	l->set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER);
-	l->set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER);
-	l->set_modulate(Color(1, 1, 1, 0.7));
-	renderer_container->add_child(l);
+	pLabel = memnew(Label);
+	pLabel->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
+	pLabel->set_text(TTRC("The renderer can be changed later, but scenes may need to be adjusted."));
+	// 添加一些额外的间距，使其与上面的列表和下面的按钮分开.
+	pLabel->set_custom_minimum_size(Size2(0, 40) * EDSCALE);
+	pLabel->set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER);
+	pLabel->set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER);
+	pLabel->set_modulate(Color(1, 1, 1, 0.7));
+	renderer_container->add_child(pLabel);
 
 	default_files_container = memnew(HBoxContainer);
-	vb->add_child(default_files_container);
-	l = memnew(Label);
-	l->set_text(TTRC("Version Control Metadata:"));
-	default_files_container->add_child(l);
+	pVBoxContainer->add_child(default_files_container);
+	pLabel = memnew(Label);
+	pLabel->set_text(TTRC("Version Control Metadata:"));
+	default_files_container->add_child(pLabel);
 	vcs_metadata_selection = memnew(OptionButton);
 	vcs_metadata_selection->set_custom_minimum_size(Size2(100, 20));
 	vcs_metadata_selection->add_item(TTRC("None"), (int)EditorVCSInterface::VCSMetadata::NONE);
 	vcs_metadata_selection->add_item(TTRC("Git"), (int)EditorVCSInterface::VCSMetadata::GIT);
-	vcs_metadata_selection->select((int)EditorVCSInterface::VCSMetadata::GIT);
+	vcs_metadata_selection->select((int)EditorVCSInterface::VCSMetadata::NONE);//默认为无
 	vcs_metadata_selection->set_accessibility_name(TTRC("Version Control Metadata"));
 	default_files_container->add_child(vcs_metadata_selection);
 	Control *spacer = memnew(Control);
 	spacer->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	default_files_container->add_child(spacer);
 	fdialog_install = memnew(EditorFileDialog);
-	fdialog_install->set_previews_enabled(false); //Crucial, otherwise the engine crashes.
+	fdialog_install->set_previews_enabled(false); //至关重要，否则引擎崩溃。
 	fdialog_install->set_access(EditorFileDialog::ACCESS_FILESYSTEM);
 	add_child(fdialog_install);
 
 	Control *spacer2 = memnew(Control);
 	spacer2->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-	vb->add_child(spacer2);
+	pVBoxContainer->add_child(spacer2);
 
 	edit_check_box = memnew(CheckBox);
 	edit_check_box->set_text(TTRC("Edit Now"));
 	edit_check_box->set_h_size_flags(Control::SIZE_SHRINK_CENTER);
 	edit_check_box->set_pressed(true);
-	vb->add_child(edit_check_box);
+	pVBoxContainer->add_child(edit_check_box);
+
+	use_gorge_check_box = memnew(CheckBox);
+	use_gorge_check_box->set_text(TTRC("Auto Import Gorge Plugin"));
+	use_gorge_check_box->set_h_size_flags(Control::SIZE_SHRINK_CENTER);
+	use_gorge_check_box->set_pressed(false);
+	pVBoxContainer->add_child(use_gorge_check_box);
 
 	project_name->connect(SceneStringName(text_changed), callable_mp(this, &ProjectDialog::_project_name_changed).unbind(1));
 	project_name->connect(SceneStringName(text_submitted), callable_mp(this, &ProjectDialog::ok_pressed).unbind(1));

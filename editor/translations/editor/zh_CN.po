@@ -19322,3 +19322,8 @@ msgstr ""
 "正在尝试将模型空间的顶点位置 VERTEX 赋值给裁剪空间的顶点位置 POSITION。4.3 版"
 "本修改了裁剪空间的定义，因此如果这段代码是在 4.3 之前编写的，就会无法继续工"
 "作。请考虑直接指定裁剪空间的 Z 分量，即使用 `vec4(VERTEX.xy, 1.0, 1.0)`。"
+
+# Webstorm Addition
+
+msgid "Auto Import Gorge Plugin"
+msgstr "自动导入 Gorge 插件"

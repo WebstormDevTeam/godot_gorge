@@ -10,7 +10,7 @@ namespace GodotTools.ProjectEditor
 {
     public static class ProjectGenerator
     {
-        public static string GodotSdkAttrValue => $"Godot.NET.Sdk/{GeneratedGodotNupkgsVersions.GodotNETSdk}";
+        public static string GodotSdkAttrValue => $"Godot.NET.Sdk/{GeneratedGodotNupkgsVersions.GodotNETSdk}.3";// Godot.NET.Sdk version here is fix the auto generated version, because the auto generated version is not correct.
 
         public static string GodotMinimumRequiredTfm => "net8.0";
 
